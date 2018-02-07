@@ -2,6 +2,7 @@ package logs
 
 import (
 	"os"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -69,8 +70,27 @@ func BenchmarkAsync(b *testing.B) {
 	SetBaseWriter(w)
 
 	for i := 0; i < b.N; i++ {
-		Debugf("%s", "debug message")
+		do()
 	}
 
 	Flush()
+}
+
+func do() {
+	var wg = new(sync.WaitGroup)
+	var num = 1000
+	wg.Add(num)
+
+	for i := 0; i < num; i++ {
+		go one(wg)
+	}
+
+	wg.Wait()
+}
+
+func one(wg *sync.WaitGroup) {
+	for i := 0; i < 1000; i++ {
+		Debugf("%s", "debug message")
+	}
+	wg.Done()
 }

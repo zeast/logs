@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -192,6 +193,13 @@ func (w *FileWriter) deleteOldFile() {
 }
 
 func (w *FileWriter) initFile() error {
+	dir, _ := path.Split(w.cfg.Name)
+	if _, err := os.Stat(dir); err != nil && os.IsNotExist(err) {
+		if err = os.MkdirAll(dir, 0755); err != nil {
+			return err
+		}
+	}
+
 	file, err := os.OpenFile(w.cfg.Name, os.O_WRONLY|os.O_CREATE|os.O_APPEND, w.cfg.perm)
 	if err != nil {
 		return err

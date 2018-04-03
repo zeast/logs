@@ -144,7 +144,7 @@ func (w *FileWriter) doRotate() {
 			}
 		}
 	} else {
-		fName = w.cfg.Name + fmt.Sprintf("%s", time.Now().Format("2006-01-02"))
+		fName = w.cfg.Name + fmt.Sprintf(".%s", time.Now().Format("2006-01-02"))
 		_, err = os.Lstat(fName)
 		if err == nil {
 			for i := 0; ; i++ {

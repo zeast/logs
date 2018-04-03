@@ -227,7 +227,7 @@ func (l *Logger) AddWriter(lv uint32, w io.Writer) error {
 		return invalidLvErr
 	}
 
-	l.writers[LevelError] = append(l.writers[LevelError], w)
+	l.writers[lv] = append(l.writers[lv], w)
 	return nil
 }
 

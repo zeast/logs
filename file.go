@@ -86,6 +86,13 @@ func NewFileWriter(cfg FileConfig) (*FileWriter, error) {
 
 func (w *FileWriter) Write(p []byte) (n int, err error) {
 	w.Lock()
+	if w.needRotate() {
+		if w.cfg.Async {
+			w.writer.Flush()
+		}
+
+		w.doRotate()
+	}
 
 	if w.cfg.Async {
 		n, err = w.writer.Write(p)
@@ -94,14 +101,6 @@ func (w *FileWriter) Write(p []byte) (n int, err error) {
 	}
 
 	w.curSize += n
-
-	if w.needRotate() {
-		if w.cfg.Async {
-			w.writer.Flush()
-		}
-
-		w.doRotate()
-	}
 
 	w.Unlock()
 

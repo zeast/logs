@@ -19,7 +19,7 @@ type FileWriter struct {
 	sync.Mutex
 	writer        *bufio.Writer
 	file          *os.File
-	curOpenDay    int
+	openTime      time.Time
 	curSize       int
 	flushInterval time.Duration
 	cfg           FileConfig
@@ -123,7 +123,7 @@ func (w *FileWriter) needRotate() bool {
 		return false
 	}
 
-	if (w.cfg.Rotate.Daily && day() != w.curOpenDay) ||
+	if (w.cfg.Rotate.Daily && day() != w.openTime.Day()) ||
 		(w.cfg.Rotate.MaxSize > 0 && w.curSize >= w.cfg.Rotate.MaxSize) {
 		return true
 	}
@@ -137,18 +137,18 @@ func (w *FileWriter) doRotate() {
 
 	if w.cfg.Rotate.MaxSize > 0 {
 		for i := 0; ; i++ {
-			fName = w.cfg.Name + fmt.Sprintf(".%s.%03d", time.Now().Format("2006-01-02"), i)
+			fName = w.cfg.Name + fmt.Sprintf(".%s.%03d", w.openTime.Format("2006-01-02"), i)
 			_, err = os.Lstat(fName)
 			if err != nil {
 				break
 			}
 		}
 	} else {
-		fName = w.cfg.Name + fmt.Sprintf(".%s", time.Now().Format("2006-01-02"))
+		fName = w.cfg.Name + fmt.Sprintf(".%s", w.openTime.Format("2006-01-02"))
 		_, err = os.Lstat(fName)
 		if err == nil {
 			for i := 0; ; i++ {
-				fName = w.cfg.Name + fmt.Sprintf(".%s.%03d", time.Now().Format("2006-01-02"), i)
+				fName = w.cfg.Name + fmt.Sprintf(".%s.%03d", w.openTime.Format("2006-01-02"), i)
 				_, err = os.Lstat(fName)
 				if err != nil {
 					break
@@ -219,7 +219,7 @@ func (w *FileWriter) initFile() error {
 		}
 	}
 
-	w.curOpenDay = time.Now().Day()
+	w.openTime = time.Now()
 	w.file = file
 
 	return nil

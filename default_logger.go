@@ -71,8 +71,16 @@ func SetLogLevel(lv uint32) {
 	_logger.SetLogLevel(lv)
 }
 
+func LogLevel() uint32 {
+	return _logger.LogLevel()
+}
+
 func SetLogLevelStr(lv string) {
 	_logger.SetLogLevelStr(lv)
+}
+
+func LogLevelStr() string {
+	return _logger.LogLevelStr()
 }
 
 func LogFuncCall(b bool) {

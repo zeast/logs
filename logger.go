@@ -25,6 +25,14 @@ var levelMap = map[string]uint32{
 	"fatal": LevelFatal,
 }
 
+var levelRvsMap = map[uint32]string{
+	LevelDebug: "debug",
+	LevelInfo:  "info",
+	LevelWarn:  "warn",
+	LevelError: "error",
+	LevelFatal: "fatal",
+}
+
 var invalidLvErr = errors.New("invalid level")
 
 var levelStr = map[uint32][]byte{
@@ -218,8 +226,16 @@ func (l *Logger) SetLogLevel(lv uint32) {
 	}
 }
 
+func (l *Logger) LogLevel() uint32 {
+	return atomic.LoadUint32(&l.level)
+}
+
 func (l *Logger) SetLogLevelStr(lv string) {
 	l.SetLogLevel(levelMap[lv])
+}
+
+func (l *Logger) LogLevelStr() string {
+	return levelRvsMap[l.LogLevel()]
 }
 
 func (l *Logger) AddWriter(lv uint32, w io.Writer) error {

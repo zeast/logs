@@ -6,7 +6,10 @@ import (
 	"path"
 	"runtime"
 	"sync"
+	"time"
 )
+
+var now = time.Now
 
 var bufPool = sync.Pool{
 	New: NewBuffer,
@@ -35,12 +38,12 @@ func caller(depth int) (string, int) {
 
 }
 
-func (b *buffer) formatTime() {
+func (b *buffer) formatTime(layout string) {
 	if b.err != nil {
 		return
 	}
 
-	_, b.err = b.buf.Write(nowData())
+	b.buf.WriteString(now().Format(layout))
 }
 
 func (b *buffer) formatLevel(lv uint32) {

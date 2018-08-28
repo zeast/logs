@@ -99,6 +99,10 @@ func SetBaseWriter(w io.Writer) {
 	_logger.SetBaseWriter(w)
 }
 
+func SetTimeLayout(layout string) {
+	_logger.SetTimeLayout(layout)
+}
+
 func Flush() {
 	_logger.Flush()
 }

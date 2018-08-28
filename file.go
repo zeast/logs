@@ -123,7 +123,7 @@ func (w *FileWriter) needRotate() bool {
 		return false
 	}
 
-	if (w.cfg.Rotate.Daily && day() != w.openTime.Day()) ||
+	if (w.cfg.Rotate.Daily && now().Day() != w.openTime.Day()) ||
 		(w.cfg.Rotate.MaxSize > 0 && w.curSize >= w.cfg.Rotate.MaxSize) {
 		return true
 	}

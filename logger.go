@@ -34,6 +34,7 @@ var levelRvsMap = map[uint32]string{
 }
 
 var invalidLvErr = errors.New("invalid level")
+var defaultTimeLayout = "2006-01-02 15:04:05"
 
 var levelStr = map[uint32][]byte{
 	LevelDebug: []byte(" [DEBUG] "),
@@ -50,6 +51,7 @@ type Flusher interface {
 type Logger struct {
 	sync.Mutex
 	level uint32
+	timeLayout string
 
 	writers [][]io.Writer
 
@@ -75,7 +77,7 @@ func (l *Logger) LogFuncCallDepth(depth int) {
 func (l *Logger) writef(lv uint32, format string, a ...interface{}) {
 	buf := bufPool.Get().(*buffer)
 	buf.reset()
-	buf.formatTime()
+	buf.formatTime(l.timeLayout)
 	buf.formatLevel(lv)
 	if l.funcCall {
 		buf.formatCaller(l.funcCallDepth)
@@ -110,7 +112,7 @@ func (l *Logger) writef(lv uint32, format string, a ...interface{}) {
 func (l *Logger) write(lv uint32, a ...interface{}) {
 	buf := bufPool.Get().(*buffer)
 	buf.reset()
-	buf.formatTime()
+	buf.formatTime(l.timeLayout)
 	buf.formatLevel(lv)
 	if l.funcCall {
 		buf.formatCaller(l.funcCallDepth)
@@ -253,6 +255,10 @@ func (l *Logger) SetBaseWriter(w io.Writer) {
 	}
 }
 
+func (l *Logger) SetTimeLayout(layout string) {
+	l.timeLayout = layout
+}
+
 func (l *Logger) Flush() {
 	for _, ws := range l.writers {
 		for _, w := range ws {
@@ -267,6 +273,7 @@ func NewLogger(w io.Writer) *Logger {
 
 	l := Logger{
 		level: LevelDebug,
+		timeLayout:defaultTimeLayout,
 		writers: [][]io.Writer{
 			[]io.Writer{w},
 			[]io.Writer{w},

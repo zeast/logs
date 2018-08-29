@@ -210,6 +210,8 @@ func (w *FileWriter) initFile() error {
 	}
 
 	w.curSize = int(fInfo.Size())
+	w.openTime = fInfo.ModTime()
+	w.file = file
 
 	if w.cfg.Async {
 		if w.writer != nil {
@@ -218,9 +220,6 @@ func (w *FileWriter) initFile() error {
 			w.writer = bufio.NewWriterSize(file, w.cfg.BufSize)
 		}
 	}
-
-	w.openTime = time.Now()
-	w.file = file
 
 	return nil
 }

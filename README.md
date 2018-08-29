@@ -12,6 +12,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 
 	"github.com/zeast/logs"
@@ -32,7 +33,10 @@ func main() {
 	)
 
 	//check err
-	_ = err
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	logs.SetBaseWriter(w)
 
@@ -42,7 +46,7 @@ func main() {
 
 	logs.SetTimeLayout("2006-01-02 15:04:05.000") //default is 2006-01-02 15:04:05
 
-	logs.Debugf("debug message")
+	logs.Debug("debug message")
 
 	var b1 = []byte{123, 34, 107, 34, 58, 34, 115, 111, 109, 101, 32, 109, 97, 114, 115, 104, 97, 108, 32, 98, 121, 116, 101, 115, 34, 125}
 	if logs.LogDebug() {
@@ -56,7 +60,7 @@ func main() {
 
 	var b2 = []byte("big byte slice")
 	if logs.LogInfo() {
-		//if you use logs.Info() immediate, one memory copy will happen
+		//if you use logs.Info() immediate, one memory copy always happen even if log level higher than info
 		logs.Info(string(b2))
 	}
 

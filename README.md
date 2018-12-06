@@ -1,5 +1,5 @@
 # Logs
-[![Build Status](https://travis-ci.org/zeast/logs.svg?branch=master)](https://travis-ci.org/zeast/logs) [![Coverage Status](https://coveralls.io/repos/github/zeast/logs/badge.svg?branch=master)](https://coveralls.io/github/zeast/logs?branch=master)
+[![Build Status](https://travis-ci.org/zeast/logs.svg?branch=master)](https://travis-ci.org/zeast/logs) [![Coverage Status](https://coveralls.io/repos/github/zeast/logs/badge.svg?branch=master)](https://coveralls.io/github/zeast/logs?branch=master)  
 package logs a simple unstructured log implements for Go.
 
 ## Features

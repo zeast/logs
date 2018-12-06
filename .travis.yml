@@ -1,8 +1,8 @@
 language: go
 
 install:
-  - go get github.com/mattn/goveralls
+    - go get github.com/stretchr/testify/assert
+    - go get github.com/mattn/goveralls
 
-script: 
-    - go test -run . -v -covermode=count -coverprofile=coverage.out
-    - goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+script:
+    - goveralls -repotoken $COVERALLS_TOKEN

@@ -12,7 +12,7 @@ import (
 var now = time.Now
 
 var bufPool = sync.Pool{
-	New: NewBuffer,
+	New: newBuffer,
 }
 
 type buffer struct {
@@ -20,7 +20,7 @@ type buffer struct {
 	buf *bytes.Buffer
 }
 
-func NewBuffer() interface{} {
+func newBuffer() interface{} {
 	return &buffer{
 		buf: bytes.NewBuffer(make([]byte, 1024)),
 	}

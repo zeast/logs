@@ -12,9 +12,10 @@ import (
 	"time"
 )
 
-var MinBufSize = 4096
+var minBufSize = 4096
 var eof = []byte{10}
 
+// FileWriter implement io.Writer
 type FileWriter struct {
 	sync.Mutex
 	writer        *bufio.Writer
@@ -25,6 +26,7 @@ type FileWriter struct {
 	cfg           FileConfig
 }
 
+// FileConfig use to configure a FileWriter
 type FileConfig struct {
 	Name    string
 	Async   bool
@@ -34,6 +36,7 @@ type FileConfig struct {
 	Rotate  *Rotate
 }
 
+// Rotate configure file rotate
 type Rotate struct {
 	MaxSize int
 	MaxDays int
@@ -42,12 +45,13 @@ type Rotate struct {
 	perm    os.FileMode
 }
 
+// NewFileWriter return a FileWriter with config
 func NewFileWriter(cfg FileConfig) (*FileWriter, error) {
 	var w = new(FileWriter)
 	w.cfg = cfg
 
-	if w.cfg.BufSize < MinBufSize {
-		w.cfg.BufSize = MinBufSize
+	if w.cfg.BufSize < minBufSize {
+		w.cfg.BufSize = minBufSize
 	}
 
 	if w.cfg.Perm == "" {
@@ -84,6 +88,7 @@ func NewFileWriter(cfg FileConfig) (*FileWriter, error) {
 	return w, nil
 }
 
+// Write write p to underlying, if FileWriter is async, p maybe buffered.
 func (w *FileWriter) Write(p []byte) (n int, err error) {
 	w.Lock()
 	if w.needRotate() {
@@ -107,6 +112,8 @@ func (w *FileWriter) Write(p []byte) (n int, err error) {
 	return
 }
 
+// Flush writes buffered data to the underlying writer.
+// If FileWriter is async, call flush when program exit.
 func (w *FileWriter) Flush() (err error) {
 	if !w.cfg.Async {
 		return nil

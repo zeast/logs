@@ -105,6 +105,10 @@ func (l *Logger) writef(lv uint32, format string, a ...interface{}) {
 	}
 
 	for _, w := range l.writers[lv] {
+		if w == nil {
+			continue
+		}
+
 		if _, err := w.Write(buf.bytes()); err != nil {
 			fmt.Println(err)
 		}
@@ -139,6 +143,10 @@ func (l *Logger) write(lv uint32, a ...interface{}) {
 	}
 
 	for _, w := range l.writers[lv] {
+		if w == nil {
+			continue
+		}
+
 		if _, err := w.Write(buf.bytes()); err != nil {
 			fmt.Println(err)
 		}

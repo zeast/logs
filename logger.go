@@ -123,7 +123,7 @@ func (l *Logger) writef(lv uint32, format string, a ...interface{}) {
 	bufPool.Put(buf)
 
 	if lv == LevelFatal {
-		os.Exit(0)
+		os.Exit(1)
 	}
 }
 
@@ -160,7 +160,7 @@ func (l *Logger) write(lv uint32, a ...interface{}) {
 	bufPool.Put(buf)
 
 	if lv == LevelFatal {
-		os.Exit(0)
+		os.Exit(1)
 	}
 }
 

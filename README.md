@@ -25,7 +25,7 @@ func main() {
 			Name: "/tmp/xxx.log",
 			Perm: "0644",
 			Rotate: &logs.Rotate{
-				MaxSize: 1024 * 1024, //1G
+				MaxSize: 1000 * 1000 * 1000, //1G
 				MaxDays: 10,          //10 day
 				Perm:    "0444",
 				Daily:   true,

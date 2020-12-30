@@ -131,3 +131,8 @@ func SetTimeLayout(layout string) {
 func Flush() {
 	_logger.Flush()
 }
+
+// DefaultLogger return the default logger.
+func DefaultLogger() *Logger {
+	return _logger;
+}

@@ -178,7 +178,8 @@ func (w *FileWriter) doRotate() {
 }
 
 func (w *FileWriter) deleteOldFile() {
-	dir := filepath.Dir(w.cfg.Name)
+	cleanFilename := filepath.Clean(w.cfg.Name)
+	dir := filepath.Dir(cleanFilename)
 
 	filepath.Walk(dir, func(path string, info os.FileInfo, err error) (returnErr error) {
 		defer func() {
@@ -191,7 +192,9 @@ func (w *FileWriter) deleteOldFile() {
 			return
 		}
 
-		if !info.IsDir() && info.ModTime().Add(24*time.Hour*time.Duration(w.cfg.Rotate.MaxDays)).Before(time.Now()) && strings.HasPrefix(path, w.cfg.Name) {
+		if !info.IsDir() &&
+			info.ModTime().Add(24*time.Hour*time.Duration(w.cfg.Rotate.MaxDays)).Before(time.Now()) &&
+			strings.HasPrefix(path, cleanFilename) {
 			os.Remove(path)
 		}
 		return
